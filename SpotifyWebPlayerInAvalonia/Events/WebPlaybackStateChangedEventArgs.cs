@@ -2,7 +2,7 @@ using SpotifyWebPlayerInAvalonia.Models.WebPlaybackState;
 
 namespace SpotifyWebPlayerInAvalonia.Events;
 
-public class WebPlaybackStateChangedEventArgs : EventArgs
+public class WebPlaybackStateChangedEventArgs(WebPlaybackState state) : EventArgs
 {
-    public required WebPlaybackState PlaybackState { get; init; }
+    public WebPlaybackState PlaybackState  { get; } = state;
 }

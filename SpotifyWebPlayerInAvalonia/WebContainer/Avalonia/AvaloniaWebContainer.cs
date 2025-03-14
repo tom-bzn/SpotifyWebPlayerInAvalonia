@@ -1,14 +1,13 @@
 using Avalonia.Controls;
 using AvaloniaWebView;
 using SpotifyWebPlayerInAvalonia.Events;
-using SpotifyWebPlayerInAvalonia.Models;
-using SpotifyWebPlayerInAvalonia.Models.WebPlaybackState;
-using SpotifyWebPlayerInAvalonia.Services;
 
 namespace SpotifyWebPlayerInAvalonia.WebContainer.Avalonia;
 
-internal class AvaloniaWebContainer(ReceiverOfWebPlayerMessages messagesReceiver) : BaseWebContainer(messagesReceiver), IWebContainer
+internal class AvaloniaWebContainer : IWebContainer
 {
+    public event EventHandler<MessageReceivedEventArgs>? MessageReceived;
+
     private readonly WebView _webView = new();
 
     public void Start(string htmlAndJsContent)
@@ -23,7 +22,7 @@ internal class AvaloniaWebContainer(ReceiverOfWebPlayerMessages messagesReceiver
 
         _webView.WebMessageReceived += (s, a) =>
         {
-            ReceiveMessage(a.Message);
+            MessageReceived?.Invoke(this, new MessageReceivedEventArgs(a.Message));
         };
     }
 

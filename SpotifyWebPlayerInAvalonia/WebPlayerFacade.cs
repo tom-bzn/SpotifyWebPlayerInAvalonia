@@ -1,4 +1,6 @@
 using SpotifyWebPlayerInAvalonia.Events;
+using SpotifyWebPlayerInAvalonia.Models;
+using SpotifyWebPlayerInAvalonia.Models.WebPlaybackState;
 using CommandType = SpotifyWebPlayerInAvalonia.Models.CommandForWebPlayerType;
 using SpotifyWebPlayerInAvalonia.Services;
 using SpotifyWebPlayerInAvalonia.WebContainer;
@@ -7,7 +9,8 @@ namespace SpotifyWebPlayerInAvalonia;
 
 internal class WebPlayerFacade(
     ProviderOfPlayerHtmlAndJsContent htmlContentProvider,
-    IWebContainer webContainer) : IWebPlayerFacade
+    IWebContainer webContainer,
+    ReceiverOfWebPlayerMessages messagesReceiver) : IWebPlayerFacade
 {
     public event EventHandler<WebPlayerReadyEventArgs>? WebPlayerReady;
     public event EventHandler<WebPlaybackStateChangedEventArgs>? WebPlaybackStateChanged;
@@ -16,16 +19,11 @@ internal class WebPlayerFacade(
     {
         string content = htmlContentProvider.GetHtmlAndJsContent(accessToken, playerName);
 
-        webContainer.WebPlayerReady += (s, a) =>
+        webContainer.MessageReceived += (s, args) =>
         {
-            WebPlayerReady?.Invoke(this, a);
+            ReceiveMessage(args.RawMessage);
         };
-
-        webContainer.WebPlaybackStateChanged += (s, a) =>
-        {
-            WebPlaybackStateChanged?.Invoke(this, a);
-        };
-
+        
         webContainer.Start(content);
     }
 
@@ -48,5 +46,27 @@ internal class WebPlayerFacade(
     public void RewindTo(uint position)
     {
         webContainer.SendCommand(htmlContentProvider.CreateCommandWithParam(CommandType.RewindTo, position.ToString()));
+    }
+
+    private void ReceiveMessage(string rawMessage)
+    {
+        (MessageFromWebPlayerType type, object data) = messagesReceiver.Receive(rawMessage);
+
+        if (type == MessageFromWebPlayerType.DeviceId)
+        {
+            var deviceId = (string)data;
+            var eventArgs = new WebPlayerReadyEventArgs(deviceId);
+            WebPlayerReady?.Invoke(this, eventArgs);
+        }
+        else if (type == MessageFromWebPlayerType.PlaybackState)
+        {
+            var playbackState = (WebPlaybackState)data;
+            var eventArgs = new WebPlaybackStateChangedEventArgs(playbackState);
+            WebPlaybackStateChanged?.Invoke(this, eventArgs);
+        }
+        else
+        {
+            throw new NotImplementedException($"Message type \"{type}\" has not been implemented yet.");
+        }
     }
 }

@@ -1,6 +1,6 @@
 namespace SpotifyWebPlayerInAvalonia.Events;
 
-public class WebPlayerReadyEventArgs : EventArgs
+public class WebPlayerReadyEventArgs(string deviceId) : EventArgs
 {
-    public required string DeviceId { get; init; }
+    public string DeviceId { get; } = deviceId;
 }
