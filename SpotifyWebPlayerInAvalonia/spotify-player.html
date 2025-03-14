@@ -6,15 +6,15 @@
     <script type="text/javascript" src="https://sdk.scdn.co/spotify-player.js"></script>
     <script>
         const receiveMessage = (message) => {
-            if (message.startsWith('[-setVolumeCmdPrefix-]')) {
-                let newVolumePercent = parseInt(message.replace('[-setVolumeCmdPrefix-]', ''));
+            if (message.startsWith('cmd:setVolume:')) {
+                let newVolumePercent = parseInt(message.replace('cmd:setVolume:', ''));
                 player.setVolume(newVolumePercent * 0.01);
 
                 return;
             }
 
-            if (message.startsWith('[-rewindToCmdPrefix-]')) {
-                let newTrackPosition = parseInt(message.replace('[-rewindToCmdPrefix-]', ''));
+            if (message.startsWith('cmd:rewindTo:')) {
+                let newTrackPosition = parseInt(message.replace('cmd:rewindTo:', ''));
                 player.seek(newTrackPosition * 1000);
 
                 return;
@@ -22,13 +22,13 @@
 
             try {
                 switch (message) {
-                    case '[-playNextTrackCmd-]':
+                    case 'cmd:playNextTrack':
                         player.nextTrack();
                         break;
-                    case '[-playPreviousTrackCmd-]':
+                    case 'cmd:playPreviousTrack':
                         player.previousTrack();
                         break;
-                    case '[-togglePlayCmd-]':
+                    case 'cmd:togglePlay':
                         player.togglePlay();
                         break;
                     default:
@@ -60,11 +60,11 @@
             });
 
             player.addListener('ready', ({device_id}) => {
-                sendMessage('[-deviceIdPrefix-]' + device_id);
+                sendMessage('DeviceId:' + device_id);
             });
 
             player.addListener('player_state_changed', state => {
-                sendMessage('[-playbackStatePrefix-]' + JSON.stringify(state));
+                sendMessage('PlaybackState:' + JSON.stringify(state));
             });
 
             player.connect();

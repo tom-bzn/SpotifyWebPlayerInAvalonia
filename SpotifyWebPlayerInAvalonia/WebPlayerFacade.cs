@@ -31,21 +31,22 @@ internal class WebPlayerFacade(
 
     public void PlayNextTrack()
     {
-        webContainer.SendCommand(HtmlContract.CreateCommandWithoutParam(CommandType.PlayNextTrack));
+        webContainer.SendCommand(htmlContentProvider.CreateCommandWithoutParam(CommandType.PlayNextTrack));
     }
 
     public void PlayPreviousTrack()
     {
-        webContainer.SendCommand(HtmlContract.CreateCommandWithoutParam(CommandType.PlayPreviousTrack));
+        webContainer.SendCommand(htmlContentProvider.CreateCommandWithoutParam(CommandType.PlayPreviousTrack));
     }
 
     public void SetVolume(VolumeValueObject volume)
     {
-        webContainer.SendCommand(HtmlContract.CreateCommandWithParam(CommandType.SetVolume, volume.Volume.ToString()));
+        webContainer.SendCommand(
+            htmlContentProvider.CreateCommandWithParam(CommandType.SetVolume, volume.Volume.ToString()));
     }
 
     public void RewindTo(uint position)
     {
-        webContainer.SendCommand(HtmlContract.CreateCommandWithParam(CommandType.RewindTo, position.ToString()));
+        webContainer.SendCommand(htmlContentProvider.CreateCommandWithParam(CommandType.RewindTo, position.ToString()));
     }
 }
