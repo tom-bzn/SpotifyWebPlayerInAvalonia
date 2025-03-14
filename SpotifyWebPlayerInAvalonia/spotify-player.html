@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Player</title>
+    <script type="text/javascript" src="https://sdk.scdn.co/spotify-player.js"></script>
+    <script>
+        const receiveMessage = (message) => {
+            if (message.startsWith('[-setVolumeCmdPrefix-]')) {
+                let newVolumePercent = parseInt(message.replace('[-setVolumeCmdPrefix-]', ''));
+                player.setVolume(newVolumePercent * 0.01);
+
+                return;
+            }
+
+            if (message.startsWith('[-rewindToCmdPrefix-]')) {
+                let newTrackPosition = parseInt(message.replace('[-rewindToCmdPrefix-]', ''));
+                player.seek(newTrackPosition * 1000);
+
+                return;
+            }
+
+            try {
+                switch (message) {
+                    case '[-playNextTrackCmd-]':
+                        player.nextTrack();
+                        break;
+                    case '[-playPreviousTrackCmd-]':
+                        player.previousTrack();
+                        break;
+                    case '[-togglePlayCmd-]':
+                        player.togglePlay();
+                        break;
+                    default:
+                        console.log('Unknown message type received.');
+                }
+            } catch (e) {}
+        };
+
+        if (window.chrome) {
+            window.sendMessage = (message) => window.chrome.webview.postMessage(message);
+            window.chrome.webview.addEventListener('message', receiveMessage);
+        } else if (window.webkit) {
+            window.sendMessage = (message) => window.webkit.messageHandlers.webview.postMessage(message);
+            window.__dispatchMessageCallback = receiveMessage;
+        }
+    </script>
+</head>
+<body>
+    <script>
+        let player = null;
+
+        window.onSpotifyWebPlaybackSDKReady = async () => {
+            player = new window.Spotify.Player({
+                name: '[-playerName-]',
+                getOAuthToken: cb => {
+                    cb('[-token-]');
+                },
+                volume: 0.5
+            });
+
+            player.addListener('ready', ({device_id}) => {
+                sendMessage('[-deviceIdPrefix-]' + device_id);
+            });
+
+            player.addListener('player_state_changed', state => {
+                sendMessage('[-playbackStatePrefix-]' + JSON.stringify(state));
+            });
+
+            player.connect();
+        }
+    </script>
+</body>
+</html>
