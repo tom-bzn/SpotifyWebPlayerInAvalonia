@@ -7,10 +7,10 @@ using SpotifyWebPlayerInAvalonia.WebContainer;
 
 namespace SpotifyWebPlayerInAvalonia;
 
-internal class WebPlayerFacade(
+internal class SpotifySpotifyWebPlayer(
     ProviderOfPlayerHtmlAndJsContent htmlContentProvider,
     IWebContainer webContainer,
-    ReceiverOfWebPlayerMessages messagesReceiver) : IWebPlayerFacade
+    ReceiverOfWebPlayerMessages messagesReceiver) : ISpotifyWebPlayer
 {
     public event EventHandler<WebPlayerReadyEventArgs>? WebPlayerReady;
     public event EventHandler<WebPlaybackStateChangedEventArgs>? WebPlaybackStateChanged;

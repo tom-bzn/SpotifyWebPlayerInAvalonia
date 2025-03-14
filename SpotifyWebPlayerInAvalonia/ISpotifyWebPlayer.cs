@@ -2,7 +2,7 @@ using SpotifyWebPlayerInAvalonia.Events;
 
 namespace SpotifyWebPlayerInAvalonia;
 
-public interface IWebPlayerFacade
+public interface ISpotifyWebPlayer
 {
     public event EventHandler<WebPlayerReadyEventArgs>? WebPlayerReady;
     public event EventHandler<WebPlaybackStateChangedEventArgs>? WebPlaybackStateChanged;

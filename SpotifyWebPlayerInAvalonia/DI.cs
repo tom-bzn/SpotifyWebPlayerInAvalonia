@@ -8,7 +8,7 @@ public static class DI
 {
     public static void SetupDI(this IServiceCollection collection)
     {
-        collection.AddTransient<IWebPlayerFacade, WebPlayerFacade>();
+        collection.AddTransient<ISpotifyWebPlayer, SpotifySpotifyWebPlayer>();
         collection.AddTransient<IWebContainer, AvaloniaWebContainer>();
     }
 }
