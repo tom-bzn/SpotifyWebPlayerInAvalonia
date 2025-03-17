@@ -1,6 +1,6 @@
 namespace SpotifyWebPlayerInAvalonia.Models;
 
-public enum CommandForWebPlayerType
+internal enum CommandForWebPlayerType
 {
     PlayNextTrack,
     PlayPreviousTrack,

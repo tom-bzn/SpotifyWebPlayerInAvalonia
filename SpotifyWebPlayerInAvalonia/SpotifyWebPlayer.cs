@@ -7,7 +7,7 @@ using SpotifyWebPlayerInAvalonia.WebContainer;
 
 namespace SpotifyWebPlayerInAvalonia;
 
-internal class SpotifySpotifyWebPlayer(
+internal class SpotifyWebPlayer(
     ProviderOfPlayerHtmlAndJsContent htmlContentProvider,
     IWebContainer webContainer,
     ReceiverOfWebPlayerMessages messagesReceiver) : ISpotifyWebPlayer
