@@ -1,8 +1,7 @@
 using Avalonia.Controls;
 using AvaloniaWebView;
-using SpotifyWebPlayerInAvalonia.Events;
 
-namespace SpotifyWebPlayerInAvalonia.WebContainer.Avalonia;
+namespace SpotifyWebPlayerInAvalonia.WebContainers.Avalonia;
 
 internal class AvaloniaWebContainer : IWebContainer
 {

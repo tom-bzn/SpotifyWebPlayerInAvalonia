@@ -1,6 +1,6 @@
-namespace SpotifyWebPlayerInAvalonia.Models;
+namespace SpotifyWebPlayerInAvalonia.WebPlayerHtml;
 
-internal enum CommandForWebPlayerType
+internal enum InputMessageType
 {
     PlayNextTrack,
     PlayPreviousTrack,

@@ -1,10 +1,8 @@
 using System.Reflection;
-using CommandType = SpotifyWebPlayerInAvalonia.Models.CommandForWebPlayerType;
-using MessageType = SpotifyWebPlayerInAvalonia.Models.MessageFromWebPlayerType;
 
-namespace SpotifyWebPlayerInAvalonia.Services;
+namespace SpotifyWebPlayerInAvalonia.WebPlayerHtml;
 
-internal class ProviderOfPlayerHtmlAndJsContent
+internal class HtmlProvider
 {
     private const string PlayerHtmlFileName = "spotify-player.html";
 
@@ -14,30 +12,6 @@ internal class ProviderOfPlayerHtmlAndJsContent
         Dictionary<string, string> placeholdersWithValues = GetPlaceholdersWithValues(accessToken, playerName);
 
         return FillPlaceholdersWithValues(content, placeholdersWithValues);
-    }
-
-    public string CreateCommandWithParam(CommandType commandType, string parameter)
-    {
-        HtmlContract.CommandsWithParam.TryGetValue(commandType, out string? prefix);
-
-        if (prefix == null)
-        {
-            throw new ArgumentOutOfRangeException(nameof(commandType), "Command type not found.");
-        }
-
-        return prefix + parameter;
-    }
-
-    public string CreateCommandWithoutParam(CommandType commandType)
-    {
-        HtmlContract.CommandsWithParam.TryGetValue(commandType, out string? command);
-
-        if (command == null)
-        {
-            throw new ArgumentOutOfRangeException(nameof(commandType), "Command type not found.");
-        }
-
-        return command;
     }
 
     private string GetContent()

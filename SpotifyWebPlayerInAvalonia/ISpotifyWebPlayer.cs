@@ -1,4 +1,4 @@
-using SpotifyWebPlayerInAvalonia.Events;
+using SpotifyWebPlayerInAvalonia.PublicEvents;
 
 namespace SpotifyWebPlayerInAvalonia;
 

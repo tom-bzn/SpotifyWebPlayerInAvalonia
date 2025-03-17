@@ -1,6 +1,5 @@
-using SpotifyWebPlayerInAvalonia.Events;
 
-namespace SpotifyWebPlayerInAvalonia.WebContainer;
+namespace SpotifyWebPlayerInAvalonia.WebContainers;
 
 public interface IWebContainer
 {

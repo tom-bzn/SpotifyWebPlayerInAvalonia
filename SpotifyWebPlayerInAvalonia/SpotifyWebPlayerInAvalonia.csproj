@@ -13,7 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="spotify-player.html" />
+    <Folder Include="SpotifyModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="WebPlayerHtml\spotify-player.html" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-namespace SpotifyWebPlayerInAvalonia.Models.WebPlaybackTrack;
+namespace SpotifyWebPlayerInAvalonia.SpotifyModels.WebPlaybackTrack;
 
 public record Album(
     string Uri,

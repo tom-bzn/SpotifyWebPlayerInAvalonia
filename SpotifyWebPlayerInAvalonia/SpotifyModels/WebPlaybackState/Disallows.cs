@@ -1,4 +1,4 @@
-namespace SpotifyWebPlayerInAvalonia.Models.WebPlaybackState;
+namespace SpotifyWebPlayerInAvalonia.SpotifyModels.WebPlaybackState;
 
 public record Disallows(
     bool Pausing,

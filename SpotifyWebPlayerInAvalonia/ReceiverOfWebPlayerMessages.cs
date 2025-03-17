@@ -1,8 +1,8 @@
 using System.Text.Json;
-using SpotifyWebPlayerInAvalonia.Models;
-using SpotifyWebPlayerInAvalonia.Models.WebPlaybackState;
+using SpotifyWebPlayerInAvalonia.SpotifyModels.WebPlaybackState;
+using SpotifyWebPlayerInAvalonia.WebPlayerHtml;
 
-namespace SpotifyWebPlayerInAvalonia.Services;
+namespace SpotifyWebPlayerInAvalonia;
 
 internal class ReceiverOfWebPlayerMessages
 {
@@ -14,15 +14,15 @@ internal class ReceiverOfWebPlayerMessages
     private readonly JsonSerializerOptions _serializerOptions = new()
         { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-    public (MessageFromWebPlayerType, object) Receive(string rawMessage)
+    public (OutputMessageType, object) Receive(string rawMessage)
     {
-        (MessageFromWebPlayerType msgType, string remainingData) = Extract(rawMessage);
+        (OutputMessageType msgType, string remainingData) = Extract(rawMessage);
         object data = ConvertRemainingData(msgType, remainingData);
 
         return (msgType, data);
     }
 
-    private (MessageFromWebPlayerType, string) Extract(string rawMessage)
+    private (OutputMessageType, string) Extract(string rawMessage)
     {
         var parts = rawMessage.Split(Separator);
 
@@ -31,7 +31,7 @@ internal class ReceiverOfWebPlayerMessages
             throw new ArgumentException("Message is invalid.");
         }
 
-        if (!Enum.TryParse(parts[0], out MessageFromWebPlayerType type))
+        if (!Enum.TryParse(parts[0], out OutputMessageType type))
         {
             throw new ArgumentException("Message type is invalid.");
         }
@@ -39,12 +39,12 @@ internal class ReceiverOfWebPlayerMessages
         return (type, String.Join(Separator, parts[1..]));
     }
 
-    private object ConvertRemainingData(MessageFromWebPlayerType type, string remainingData)
+    private object ConvertRemainingData(OutputMessageType type, string remainingData)
     {
         return type switch
         {
-            MessageFromWebPlayerType.DeviceId => remainingData,
-            MessageFromWebPlayerType.PlaybackState => Deserialize<WebPlaybackState>(remainingData),
+            OutputMessageType.DeviceId => remainingData,
+            OutputMessageType.PlaybackState => Deserialize<WebPlaybackState>(remainingData),
             _ => throw new NotImplementedException($"Message type {type} is not implemented.")
         };
     }

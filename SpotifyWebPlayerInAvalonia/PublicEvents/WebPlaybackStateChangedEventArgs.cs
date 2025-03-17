@@ -1,6 +1,6 @@
-using SpotifyWebPlayerInAvalonia.Models.WebPlaybackState;
+using SpotifyWebPlayerInAvalonia.SpotifyModels.WebPlaybackState;
 
-namespace SpotifyWebPlayerInAvalonia.Events;
+namespace SpotifyWebPlayerInAvalonia.PublicEvents;
 
 public class WebPlaybackStateChangedEventArgs(WebPlaybackState state) : EventArgs
 {

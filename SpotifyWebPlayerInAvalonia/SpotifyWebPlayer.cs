@@ -1,14 +1,13 @@
-using SpotifyWebPlayerInAvalonia.Events;
-using SpotifyWebPlayerInAvalonia.Models;
-using SpotifyWebPlayerInAvalonia.Models.WebPlaybackState;
-using CommandType = SpotifyWebPlayerInAvalonia.Models.CommandForWebPlayerType;
-using SpotifyWebPlayerInAvalonia.Services;
-using SpotifyWebPlayerInAvalonia.WebContainer;
+using SpotifyWebPlayerInAvalonia.PublicEvents;
+using SpotifyWebPlayerInAvalonia.SpotifyModels.WebPlaybackState;
+using SpotifyWebPlayerInAvalonia.WebContainers;
+using SpotifyWebPlayerInAvalonia.WebPlayerHtml;
 
 namespace SpotifyWebPlayerInAvalonia;
 
 internal class SpotifyWebPlayer(
-    ProviderOfPlayerHtmlAndJsContent htmlContentProvider,
+    HtmlProvider htmlContentProvider,
+    MessagesGenerator messagesGenerator,
     IWebContainer webContainer,
     ReceiverOfWebPlayerMessages messagesReceiver) : ISpotifyWebPlayer
 {
@@ -23,42 +22,49 @@ internal class SpotifyWebPlayer(
         {
             ReceiveMessage(args.RawMessage);
         };
-        
+
         webContainer.Start(content);
     }
 
     public void PlayNextTrack()
     {
-        webContainer.SendCommand(htmlContentProvider.CreateCommandWithoutParam(CommandType.PlayNextTrack));
+        string message = messagesGenerator.CreateInputMessage(InputMessageType.PlayNextTrack);
+
+        webContainer.SendCommand(message);
     }
 
     public void PlayPreviousTrack()
     {
-        webContainer.SendCommand(htmlContentProvider.CreateCommandWithoutParam(CommandType.PlayPreviousTrack));
+        string message = messagesGenerator.CreateInputMessage(InputMessageType.PlayPreviousTrack);
+
+        webContainer.SendCommand(message);
     }
 
     public void SetVolume(VolumeValueObject volume)
     {
-        webContainer.SendCommand(
-            htmlContentProvider.CreateCommandWithParam(CommandType.SetVolume, volume.Volume.ToString()));
+        string message = messagesGenerator.CreateInputMessage(InputMessageType.SetVolume, volume.Volume.ToString());
+
+        webContainer.SendCommand(message);
     }
 
     public void RewindTo(uint position)
     {
-        webContainer.SendCommand(htmlContentProvider.CreateCommandWithParam(CommandType.RewindTo, position.ToString()));
+        string message = messagesGenerator.CreateInputMessage(InputMessageType.RewindTo, position.ToString());
+
+        webContainer.SendCommand(message);
     }
 
     private void ReceiveMessage(string rawMessage)
     {
-        (MessageFromWebPlayerType type, object data) = messagesReceiver.Receive(rawMessage);
+        (OutputMessageType type, object data) = messagesReceiver.Receive(rawMessage);
 
-        if (type == MessageFromWebPlayerType.DeviceId)
+        if (type == OutputMessageType.DeviceId)
         {
             var deviceId = (string)data;
             var eventArgs = new WebPlayerReadyEventArgs(deviceId);
             WebPlayerReady?.Invoke(this, eventArgs);
         }
-        else if (type == MessageFromWebPlayerType.PlaybackState)
+        else if (type == OutputMessageType.PlaybackState)
         {
             var playbackState = (WebPlaybackState)data;
             var eventArgs = new WebPlaybackStateChangedEventArgs(playbackState);
