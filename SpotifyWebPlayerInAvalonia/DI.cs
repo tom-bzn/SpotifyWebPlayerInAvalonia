@@ -7,9 +7,11 @@ namespace SpotifyWebPlayerInAvalonia;
 
 public static class DI
 {
-    public static void SetupDI(this IServiceCollection collection)
+    public static void AddSpotifyWebPlayerInAvalonia(this IServiceCollection collection)
     {
-        collection.AddTransient<OutputMessagesDecoder>();
+        collection.AddSingleton<InputMessagesEncoder>();
+        collection.AddSingleton<OutputMessagesDecoder>();
+        collection.AddSingleton<HtmlProvider>();
         collection.AddTransient<ISpotifyWebPlayer, SpotifyWebPlayer>();
         collection.AddTransient<IWebContainer, AvaloniaWebContainer>();
     }
