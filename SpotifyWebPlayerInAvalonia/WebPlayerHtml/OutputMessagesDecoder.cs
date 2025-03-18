@@ -1,20 +1,14 @@
 using System.Text.Json;
 using SpotifyWebPlayerInAvalonia.SpotifyModels.WebPlaybackState;
-using SpotifyWebPlayerInAvalonia.WebPlayerHtml;
 
-namespace SpotifyWebPlayerInAvalonia;
+namespace SpotifyWebPlayerInAvalonia.WebPlayerHtml;
 
-internal class ReceiverOfWebPlayerMessages
+internal class OutputMessagesDecoder
 {
-    /// <summary>
-    /// Raw msg comes in a format {Type}: {rest of the msg}
-    /// </summary>
-    private const string Separator = ": ";
-
     private readonly JsonSerializerOptions _serializerOptions = new()
         { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-    public (OutputMessageType, object) Receive(string rawMessage)
+    public (OutputMessageType, object) Decode(string rawMessage)
     {
         (OutputMessageType msgType, string remainingData) = Extract(rawMessage);
         object data = ConvertRemainingData(msgType, remainingData);
@@ -24,7 +18,7 @@ internal class ReceiverOfWebPlayerMessages
 
     private (OutputMessageType, string) Extract(string rawMessage)
     {
-        var parts = rawMessage.Split(Separator);
+        var parts = rawMessage.Split(HtmlContract.OutputMessagesSeparator);
 
         if (parts.Length < 2)
         {
@@ -36,7 +30,7 @@ internal class ReceiverOfWebPlayerMessages
             throw new ArgumentException("Message type is invalid.");
         }
 
-        return (type, String.Join(Separator, parts[1..]));
+        return (type, String.Join(HtmlContract.OutputMessagesSeparator, parts[1..]));
     }
 
     private object ConvertRemainingData(OutputMessageType type, string remainingData)

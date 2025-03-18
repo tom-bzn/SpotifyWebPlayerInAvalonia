@@ -1,6 +1,6 @@
 namespace SpotifyWebPlayerInAvalonia.WebPlayerHtml;
 
-internal class MessagesGenerator
+internal class InputMessagesEncoder
 {
     public string CreateInputMessage(InputMessageType type)
     {

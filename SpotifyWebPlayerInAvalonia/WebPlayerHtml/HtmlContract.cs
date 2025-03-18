@@ -18,6 +18,8 @@ internal static class HtmlContract
         { InputMessageType.PlayPreviousTrack, "cmd:playPreviousTrack" },
     };
 
+    public static string OutputMessagesSeparator = ":";
+
     public static Dictionary<OutputMessageType, string> Messages { get; } = new()
     {
         { OutputMessageType.DeviceId, "DeviceId:" }, // <- notice ":" at the end, some value should be passed

@@ -7,9 +7,9 @@ namespace SpotifyWebPlayerInAvalonia;
 
 internal class SpotifyWebPlayer(
     HtmlProvider htmlContentProvider,
-    MessagesGenerator messagesGenerator,
+    InputMessagesEncoder inputMessagesEncoder,
     IWebContainer webContainer,
-    ReceiverOfWebPlayerMessages messagesReceiver) : ISpotifyWebPlayer
+    OutputMessagesDecoder outputMessagesDecoder) : ISpotifyWebPlayer
 {
     public event EventHandler<WebPlayerReadyEventArgs>? WebPlayerReady;
     public event EventHandler<WebPlaybackStateChangedEventArgs>? WebPlaybackStateChanged;
@@ -28,35 +28,35 @@ internal class SpotifyWebPlayer(
 
     public void PlayNextTrack()
     {
-        string message = messagesGenerator.CreateInputMessage(InputMessageType.PlayNextTrack);
+        string message = inputMessagesEncoder.CreateInputMessage(InputMessageType.PlayNextTrack);
 
         webContainer.SendCommand(message);
     }
 
     public void PlayPreviousTrack()
     {
-        string message = messagesGenerator.CreateInputMessage(InputMessageType.PlayPreviousTrack);
+        string message = inputMessagesEncoder.CreateInputMessage(InputMessageType.PlayPreviousTrack);
 
         webContainer.SendCommand(message);
     }
 
     public void SetVolume(VolumeValueObject volume)
     {
-        string message = messagesGenerator.CreateInputMessage(InputMessageType.SetVolume, volume.Volume.ToString());
+        string message = inputMessagesEncoder.CreateInputMessage(InputMessageType.SetVolume, volume.Volume.ToString());
 
         webContainer.SendCommand(message);
     }
 
     public void RewindTo(uint position)
     {
-        string message = messagesGenerator.CreateInputMessage(InputMessageType.RewindTo, position.ToString());
+        string message = inputMessagesEncoder.CreateInputMessage(InputMessageType.RewindTo, position.ToString());
 
         webContainer.SendCommand(message);
     }
 
     private void ReceiveMessage(string rawMessage)
     {
-        (OutputMessageType type, object data) = messagesReceiver.Receive(rawMessage);
+        (OutputMessageType type, object data) = outputMessagesDecoder.Decode(rawMessage);
 
         if (type == OutputMessageType.DeviceId)
         {
