@@ -26,6 +26,13 @@ internal class SpotifyWebPlayer(
         webContainer.Start(content);
     }
 
+    public void TogglePlay()
+    {
+        string message = inputMessagesEncoder.CreateInputMessage(InputMessageType.TogglePlay);
+
+        webContainer.SendCommand(message);
+    }
+
     public void PlayNextTrack()
     {
         string message = inputMessagesEncoder.CreateInputMessage(InputMessageType.PlayNextTrack);
