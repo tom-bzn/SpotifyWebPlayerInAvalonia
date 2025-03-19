@@ -1,10 +1,8 @@
-using System.Reflection;
-
 namespace SpotifyWebPlayerInAvalonia.WebPlayerHtml;
 
 internal class HtmlProvider
 {
-    private const string PlayerHtmlFileName = "spotify-player.html";
+    private const string PlayerHtmlFileResourcePath = "WebPlayerHtml.spotify-player.html";
 
     public string GetHtmlAndJsContent(string accessToken, string playerName = "Spotify Web Player In Avalonia")
     {
@@ -16,13 +14,13 @@ internal class HtmlProvider
 
     private string GetContent()
     {
-        var assembly = Assembly.GetExecutingAssembly();
-        var resourcePath = $"{assembly.GetName().Name}.{PlayerHtmlFileName}";
+        var assembly = typeof(HtmlProvider).Assembly;
+        var resourcePath = $"{assembly.GetName().Name}.{PlayerHtmlFileResourcePath}";
 
         using Stream? stream = assembly.GetManifestResourceStream(resourcePath);
         if (stream == null)
         {
-            throw new FileNotFoundException("Resource not found.", PlayerHtmlFileName);
+            throw new FileNotFoundException("Resource not found.", PlayerHtmlFileResourcePath);
         }
 
         using var reader = new StreamReader(stream);
