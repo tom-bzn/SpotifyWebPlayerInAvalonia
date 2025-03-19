@@ -11,5 +11,5 @@ public interface ISpotifyWebPlayer
     public void PlayNextTrack();
     public void PlayPreviousTrack();
     public void SetVolume(VolumeValueObject volume);
-    public void RewindTo(uint position); // position in seconds
+    public void RewindTo(uint seconds);
 }
