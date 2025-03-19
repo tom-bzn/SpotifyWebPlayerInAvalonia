@@ -11,11 +11,15 @@ internal class AvaloniaWebContainer : IWebContainer
 
     public void Start(string htmlAndJsContent)
     {
-        new Window
+        Window window = new()
         {
-            IsVisible = false,
+            Width = 50,
+            Height = 50,
+            Opacity = 0.1,
             Content = _webView
-        }.Show();
+        };
+
+        window.Show();
 
         _webView.HtmlContent = htmlAndJsContent;
 
@@ -23,6 +27,8 @@ internal class AvaloniaWebContainer : IWebContainer
         {
             MessageReceived?.Invoke(this, new MessageReceivedEventArgs(a.Message));
         };
+
+        window.Hide();
     }
 
     public void SendCommand(string command)
